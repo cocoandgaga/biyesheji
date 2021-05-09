@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxj.finalexam.dao.CardMessageDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zxj.finalexam.entity.CardMessageEntity">
+        <id column="ID" property="id" />
+        <result column="ITEM_ID" property="itemId" />
+        <result column="USER_ID" property="userId" />
+        <result column="CONTENT" property="content" />
+        <result column="CREATE_TIME" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ID AS id, ITEM_ID AS itemId, USER_ID AS userId, CONTENT AS content,  CREATE_TIME AS createTime
+    </sql>
+   <delete id="deleteByItemIds">
+       delete from card_message
+       <where>
+         <if test="itemIds != null">
+             ITEM_ID in
+             <foreach collection="list" open="(" close=")" separator="," item="itemId">
+                 #{itemId}
+             </foreach>
+         </if>
+       </where>
+   </delete>
+</mapper>

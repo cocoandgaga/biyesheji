@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zxj.finalexam.dao.ToDoListDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.zxj.finalexam.entity.ToDoListEntity" id="toDoListMap">
+        <result property="id" column="ID"/>
+        <result property="descp" column="DESCP"/>
+        <result property="gmtCreate" column="GMT_CREATE"/>
+        <result property="gmtModified" column="GMT_MODIFIED"/>
+        <result property="startTime" column="START_TIME"/>
+        <result property="endTime" column="END_TIME"/>
+        <result property="isCompleted" column="IS_COMPLETED"/>
+        <result property="subjectName" column="subject_name"/>
+        <result property="teacherName" column="teacher_name"/>
+        <result property="type" column="type"/>
+        <result property="completeNum" column="complete_num"/>
+    </resultMap>
+
+
+</mapper>

@@ -1,0 +1,18 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: finalexam_router
+          uri: lb://ktx-finalexam
+          predicates:
+            - Path=/api/finalexam/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/ktx-finalexam/$\{segment}
+
+
+        - id: admin_router
+          uri: lb://ktx-admin
+          predicates:
+            - Path=/api/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/ktx-admin/$\{segment}

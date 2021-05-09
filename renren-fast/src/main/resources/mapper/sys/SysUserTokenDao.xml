@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.sys.dao.SysUserTokenDao">
+
+	<select id="queryByToken" resultType="io.renren.modules.sys.entity.SysUserTokenEntity">
+		select * from sys_user_token where token = #{token}
+	</select>
+	<select id="queryByUserId" resultType="io.renren.modules.sys.entity.SysUserTokenEntity">
+		select * from sys_user_token where user_id = #{userId}
+	</select>
+	<select id="queryByStuId" resultType="io.renren.modules.sys.entity.SysUserTokenEntity">
+		select * from sys_user_token where stu_id = #{stuId}
+	</select>
+	<update id="updateByUserId" parameterType="io.renren.modules.sys.entity.SysUserTokenEntity">
+		update sys_user_token set token=#{token},expire_time=#{expireTime},update_time=#{updateTime}
+		where user_id = #{userId}
+	</update>
+
+	<update id="updateByStuId" parameterType="io.renren.modules.sys.entity.SysUserTokenEntity">
+		update sys_user_token set token=#{token},expire_time=#{expireTime},update_time=#{updateTime}
+		where stu_id = #{stuId}
+	</update>
+</mapper>

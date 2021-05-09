@@ -1,0 +1,30 @@
+server:
+  tomcat:
+    uri-encoding: UTF-8
+  port: 7000 #项目端口号
+  servlet:
+    context-path: /ktx-finalexam #项目名地址
+
+spring:
+  application:
+    name: ktx-finalexam
+  datasource:
+    username: mall
+    password: mall
+    url: jdbc:mysql://192.168.56.10:3306/ktx_geography?useUnicode=true&characterEncoding=utf-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+logging:
+  level:
+    com.zxj.finalexam: debug
+

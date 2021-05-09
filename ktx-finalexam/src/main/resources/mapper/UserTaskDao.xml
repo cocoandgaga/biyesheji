@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zxj.finalexam.dao.UserTaskDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.zxj.finalexam.entity.UserTaskEntity" id="userTaskMap">
+        <result property="userTaskId" column="USER_TASK_ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="userName" column="USER_NAME"/>
+        <result property="userTaskName" column="USER_TASK_NAME"/>
+        <result property="userTaskDescription" column="USER_TASK_DESCRIPTION"/>
+        <result property="subjectName" column="SUBJECT_NAME"/>
+        <result property="deptId" column="DEPT_ID"/>
+        <result property="userTaskStatus" column="USER_TASK_STATUS"/>
+        <result property="startTime" column="START_TIME"/>
+        <result property="endTime" column="END_TIME"/>
+        <result property="objStatus" column="OBJ_STATUS"/>
+    </resultMap>
+
+    <resultMap id="boardDataResultMap" type="com.zxj.finalexam.vo.UserStoryCard">
+        <result column="STORY_ID" property="userTaskId"/>
+        <result column="USER_ID" property="userId"/>
+        <result column="USER_NAME" property="userName"/>
+        <result column="USER_TASK_NAME" property="userTaskName"/>
+        <result column="USER_TASK_DESCRIPTION" property="userTaskDescription"/>
+        <result column="SUBJECT_NAME" property="subjectName"/>
+        <result column="USER_DEPT_ID" property="deptId"/>
+        <result column="USER_TASK_STATUS" property="userTaskStatus"/>
+        <result column="STORY_START_TIME" property="startTime"/>
+        <result column="STORY_END_TIME" property="endTime"/>
+        <association property="position" javaType="com.zxj.finalexam.entity.FreeColumnItem">
+            <result column="USERSTORY_POSITION_COLUMNID" property="columnId"/>
+            <result column="USERSTORY_POSITION_STATUSCOLUMNID" property="statusColumnId"/>
+            <result column="USERSTORY_POSITION_SORT" property="sort"/>
+            <result column="USERSTORY_POSITION_TYPE" property="type"/>
+        </association>
+        <collection property="taskCardList" ofType="com.zxj.finalexam.vo.TaskCard">
+            <result column="STU_TASK_ID" property="stuTaskId"/>
+            <result column="USER_TASK_ID" property="userTaskId"/>
+            <result column="STU_ID" property="stuId"/>
+            <result column="STU_NAME" property="stuName"/>
+            <result column="STU_TASK_NAME" property="stuTaskName"/>
+            <result column="STU_TASK_DESCRIPTION" property="stuTaskDescription"/>
+            <result column="STU_DEPT_ID" property="deptId"/>
+            <result column="TASK_START_TIME" property="startTime"/>
+            <result column="TASK_END_TIME" property="endTime"/>
+            <result column="STU_TASK_STATUS" property="stuTaskStatus"/>
+            <result column="TASK_SUBJECT_NAME" property="subjectName"/>
+            <result column="MESSAGE_COUNT" property="messageCount"/>
+            <association property="position" javaType="com.zxj.finalexam.entity.FreeColumnItem">
+                <result column="TASK_POSITION_COLUMNID" property="columnId"/>
+                <result column="TASK_POSITION_STATUS_COLUMN_ID" property="statusColumnId"/>
+                <result column="TASK_POSITION_TASKID" property="stuTaskId"/>
+                <result column="TASK_POSITION_SORT" property="sort"/>
+                <result column="TASK_POSITION_TYPE" property="type"/>
+            </association>
+        </collection>
+    </resultMap>
+    <sql id="storySQL">
+        story.USER_TASK_ID as STORY_ID,
+        story.USER_ID as USER_ID ,
+        story.USER_NAME as USER_NAME,
+        story.USER_TASK_NAME as USER_TASK_NAME,
+        story.USER_TASK_DESCRIPTION as USER_TASK_DESCRIPTION,
+        story.SUBJECT_NAME as SUBJECT_NAME,
+        story.DEPT_ID as USER_DEPT_ID,
+        story.USER_TASK_STATUS as USER_TASK_STATUS,
+        story.START_TIME as STORY_START_TIME,
+        story.END_TIME as STORY_END_TIME
+    </sql>
+    <sql id="taskSQL">
+        task.STU_TASK_ID as STU_TASK_ID,task.USER_TASK_ID as USER_TASK_ID,
+        task.STU_TASK_NAME as STU_TASK_NAME,task.STU_TASK_DESCRIPTION as STU_TASK_DESCRIPTION,
+        task.STU_TASK_STATUS as STU_TASK_STATUS,task.START_TIME as TASK_START_TIME,
+        task.END_TIME as TASK_END_TIME,task.STU_ID as STU_ID,task.STU_NAME as STU_NAME,
+        task.DEPT_ID as STU_DEPT_ID,task.SUBJECT_NAME as TASK_SUBJECT_NAME
+    </sql>
+    <sql id="storyFreeColumnSQL">
+        freeColumn1.COLUMN_ID as USERSTORY_POSITION_COLUMNID,
+        freeColumn1.STATUS_COLUMN_ID as USERSTORY_POSITION_STATUSCOLUMNID,
+        freeColumn1.SORT as USERSTORY_POSITION_SORT,
+        freeColumn1.TYPE as USERSTORY_POSITION_TYPE
+    </sql>
+    <sql id="taskFreeColumnSQL">
+        freeColumn2.COLUMN_ID as TASK_POSITION_COLUMNID,
+        freeColumn2.STATUS_COLUMN_ID as TASK_POSITION_STATUS_COLUMN_ID,
+        freeColumn2.SORT as TASK_POSITION_SORT,
+        freeColumn2.STU_TASK_ID as TASK_POSITION_TASKID,
+        freeColumn2.TYPE as TASK_POSITION_TYPE
+    </sql>
+    <!--查询电子看板数据（新）-->
+    <select id="queryByBoardVo" resultMap="boardDataResultMap" parameterType="com.zxj.finalexam.vo.BoardVo">
+   select story.USER_TASK_ID                      as                                             STORY_ID,
+       story.USER_ID                           as                                             USER_ID,
+       story.USER_NAME                         as                                             USER_NAME,
+       story.USER_TASK_NAME                    as                                             USER_TASK_NAME,
+       story.USER_TASK_DESCRIPTION             as                                             USER_TASK_DESCRIPTION,
+       story.SUBJECT_NAME                      as                                             SUBJECT_NAME,
+       story.DEPT_ID                           as                                             USER_DEPT_ID,
+       story.USER_TASK_STATUS                  as                                             USER_TASK_STATUS,
+       story.START_TIME                        as                                             STORY_START_TIME,
+       story.END_TIME                          as                                             STORY_END_TIME,
+       freeColumn1.COLUMN_ID                   as                                             USERSTORY_POSITION_COLUMNID,
+       freeColumn1.STATUS_COLUMN_ID            as                                             USERSTORY_POSITION_STATUSCOLUMNID,
+       freeColumn1.SORT                        as                                             USERSTORY_POSITION_SORT,
+       freeColumn1.TYPE                        as                                             USERSTORY_POSITION_TYPE,
+       taskCard.STU_TASK_ID                    as                                             STU_TASK_ID,
+       taskCard.USER_TASK_ID                   as                                             USER_TASK_ID,
+       taskCard.STU_TASK_NAME                  as                                             STU_TASK_NAME,
+       taskCard.STU_TASK_DESCRIPTION           as                                             STU_TASK_DESCRIPTION,
+       taskCard.STU_TASK_STATUS                as                                             STU_TASK_STATUS,
+       taskCard.TASK_START_TIME                as                                             TASK_START_TIME,
+       taskCard.TASK_END_TIME                  as                                             TASK_END_TIME,
+       taskCard.STU_ID                         as                                             STU_ID,
+       taskCard.STU_NAME                       as                                             STU_NAME,
+       taskCard.STU_DEPT_ID                    as                                             STU_DEPT_ID,
+       taskCard.TASK_SUBJECT_NAME              as                                             TASK_SUBJECT_NAME,
+       taskCard.TASK_POSITION_COLUMNID         as                                             TASK_POSITION_COLUMNID,
+       taskCard.TASK_POSITION_STATUS_COLUMN_ID as                                             TASK_POSITION_STATUS_COLUMN_ID,
+       taskCard.TASK_POSITION_SORT             as                                             TASK_POSITION_SORT,
+       taskCard.TASK_POSITION_TASKID           as                                             TASK_POSITION_TASKID,
+       taskCard.TASK_POSITION_TYPE             as                                             TASK_POSITION_TYPE,
+       (select count(t5.ID) from card_message t5 where t5.STU_TASK_ID = taskCard.STU_TASK_ID) MESSAGE_COUNT
+from user_task story
+         left join
+     free_column_item freeColumn1
+     on story.USER_TASK_ID = freeColumn1.USER_TASK_ID and freeColumn1.TYPE = 1
+         left join(
+    select task.STU_TASK_ID             as STU_TASK_ID,
+           task.USER_TASK_ID            as USER_TASK_ID,
+           task.STU_TASK_NAME           as STU_TASK_NAME,
+           task.STU_TASK_DESCRIPTION    as STU_TASK_DESCRIPTION,
+           task.STU_TASK_STATUS         as STU_TASK_STATUS,
+           task.START_TIME              as TASK_START_TIME,
+           task.END_TIME                as TASK_END_TIME,
+           task.STU_ID                  as STU_ID,
+           task.STU_NAME                as STU_NAME,
+           task.DEPT_ID                 as STU_DEPT_ID,
+           task.SUBJECT_NAME            as TASK_SUBJECT_NAME,
+           freeColumn2.COLUMN_ID        as TASK_POSITION_COLUMNID,
+           freeColumn2.STATUS_COLUMN_ID as TASK_POSITION_STATUS_COLUMN_ID,
+           freeColumn2.SORT             as TASK_POSITION_SORT,
+           freeColumn2.STU_TASK_ID      as TASK_POSITION_TASKID,
+           freeColumn2.TYPE             as TASK_POSITION_TYPE
+    from stu_task task
+             left join
+         free_column_item freeColumn2
+         on task.STU_TASK_ID = freeColumn2.STU_TASK_ID and freeColumn2.TYPE = 2
+    where task.STU_ID = #{stuId}
+) taskCard
+                  on story.USER_TASK_ID = taskCard.USER_TASK_ID
+where story.DEPT_ID = #{deptId}
+  and story.OBJ_STATUS = 0
+order by story.START_TIME desc
+    </select>
+
+
+</mapper>

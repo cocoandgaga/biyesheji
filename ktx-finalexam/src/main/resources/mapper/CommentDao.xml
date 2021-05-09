@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zxj.finalexam.dao.CommentDao">
+    <resultMap id="commentsResultMap" type="com.zxj.finalexam.vo.CommentVO">
+        <result column="ID" property="id"/>
+        <result column="PARENT_ID" property="parentId"/>
+        <result column="TYPE" property="type"/>
+        <result column="CONTENT" property="content"/>
+        <result column="COMMENTATOR" property="commentator"/>
+        <result column="GMT_CREATE" property="gmtCreate"/>
+        <result column="LIKE_CNT" property="likeCnt"/>
+        <result column="COMMENT_CNT" property="commentCnt"/>
+        <result column="TOTAL_CNT" property="totalCnt"/>
+        <result column="NICK_NAME" property="creatorName"/>
+        <collection property="childComments" ofType="com.zxj.finalexam.entity.Comment">
+            <result column="CHILD_COMMENT_ID" property="id"/>
+            <result column="CHILD_COMMENT_PARENT_ID" property="parentId"/>
+            <result column="CHILD_COMMENT_TYPE" property="type"/>
+            <result column="CHILD_COMMENT_CONTENT" property="content"/>
+            <result column="CHILD_COMMENT_COMMENTATOR" property="commentator"/>
+            <result column="CHILD_COMMENT_NICK_NAME" property="creatorName"/>
+            <result column="CHILD_COMMENT_GMT_CREATE" property="gmtCreate"/>
+            <result column="CHILD_COMMENT_LIKE_CNT" property="likeCnt"/>
+            <result column="CHILD_COMMENT_COMMENT_CNT" property="commentCnt"/>
+            <result column="CHILD_COMMENT_NICK_NAME" property="creatorName"/>
+            <result column="CHILD_COMMENT_REPLIER_NAME" property="replierName"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="parentsCommentResultMap" type="com.zxj.finalexam.entity.Comment">
+        <result column="ID" property="id"/>
+        <result column="PARENT_ID" property="parentId"/>
+        <result column="TYPE" property="type"/>
+        <result column="CONTENT" property="content"/>
+        <result column="COMMENTATOR" property="commentator"/>
+        <result column="GMT_CREATE" property="gmtCreate"/>
+        <result column="LIKE_CNT" property="likeCnt"/>
+        <result column="COMMENT_CNT" property="commentCnt"/>
+        <result column="TOTAL_CNT" property="totalCnt"/>
+    </resultMap>
+    <sql id="PARENT_COMMENT_SQL">
+         parentComment.ID as ID,
+         parentComment.PARENT_ID as PARENT_ID,
+         parentComment.TYPE as TYPE,
+         parentComment.CONTENT as CONTENT,
+         parentComment.COMMENTATOR as COMMENTATOR,
+         parentComment.GMT_CREATE as GMT_CREATE,
+         parentComment.LIKE_CNT as LIKE_CNT,
+         parentComment.COMMENT_CNT as COMMENT_CNT
+    </sql>
+    <sql id="CHILD_COMMENT_SQL">
+         childComment.ID as CHILD_COMMENT_ID,
+         childComment.PARENT_ID as CHILD_COMMENT_PARENT_ID,
+         childComment.TYPE as CHILD_COMMENT_TYPE,
+         childComment.CONTENT as CHILD_COMMENT_CONTENT,
+         childComment.COMMENTATOR as CHILD_COMMENT_COMMENTATOR,
+         childComment.GMT_CREATE as CHILD_COMMENT_GMT_CREATE,
+         childComment.LIKE_CNT as CHILD_COMMENT_LIKE_CNT,
+         childComment.COMMENT_CNT as CHILD_COMMENT_COMMENT_CNT,
+         childComment.REPLIER_NAME as CHILD_COMMENT_REPLIER_NAME
+    </sql>
+
+
+    <select id="queryCommentsByQuestionId" resultMap="commentsResultMap">
+        select
+        <include refid="PARENT_COMMENT_SQL"></include>
+        ,
+        stu1.NICK_NAME as NICK_NAME,
+        stu2.NICK_NAME as CHILD_COMMENT_NICK_NAME,
+        <include refid="CHILD_COMMENT_SQL"></include>
+        from
+        (select ID,PARENT_ID,TYPE,CONTENT, COMMENTATOR, GMT_CREATE, LIKE_CNT,COMMENT_CNT
+        from COMMENT where PARENT_ID=#{questionId} and TYPE=1 limit #{pageIndex},#{pageSize})
+        parentComment
+        left join STU_USER stu1
+        on parentComment.commentator=stu1.USER_ID
+        left join COMMENT childComment
+        on parentComment.ID=childComment.PARENT_ID and childComment.TYPE=2
+        left join STU_USER stu2
+        on
+        childComment.commentator=stu2.USER_ID
+        order by parentComment.GMT_CREATE desc
+
+    </select>
+    <select id="queryParentCommentsByQuestionId" resultMap="parentsCommentResultMap">
+        select
+        <include refid="PARENT_COMMENT_SQL"/>
+        from COMMENT parentComment
+        where parentComment.TYPE=1 and parentComment.PARENT_ID=#{questionId}
+        order by GMT_CREATE desc
+    </select>
+    <update id="addLikeCnt">
+         update COMMENT set LIKE_CNT=LIKE_CNT+1 where ID=#{id}
+    </update>
+
+    <update id="delLikeCnt">
+         update COMMENT set LIKE_CNT=LIKE_CNT-1 where ID=#{id}
+    </update>
+    <update id="subCommentCnt">
+         update COMMENT set COMMENT_CNT=COMMENT_CNT-1 where ID=#{id}
+    </update>
+    <update id="addCommentCnt">
+         update COMMENT set COMMENT_CNT=COMMENT_CNT+1 where ID=#{id} and TYPE=1 and id=#{id}
+    </update>
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zxj.finalexam.dao.DeptUserDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.zxj.finalexam.entity.DeptUserEntity" id="deptUserMap">
+        <result property="id" column="id"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="grade" column="grade"/>
+    </resultMap>
+
+    <select id="getDeptName" resultType="com.zxj.finalexam.entity.DeptUserEntity">
+        select du.id,du.grade,du.dept_id,du.user_id,c.name,u.username
+        from DEPT_USER du
+        left join CATEGORY c
+        on du.dept_id=c.cat_id
+        left join littlemall_admin.sys_user u
+        on du.user_id=u.user_id
+        where du.user_id = #{userId} and c.show_status=1
+    </select>
+</mapper>

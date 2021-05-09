@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<ul>
+    <li>
+        <video width="320" height="240" controls>
+            <source th:src="${movie_url}" type="video/mp4">
+            <source src="movie.ogg" type="video/ogg">
+            <source src="movie.webm" type="video/webm">
+            您的浏览器不支持 video 标签。
+        </video>
+    </li>
+</ul>
+
+</body>
+</html>

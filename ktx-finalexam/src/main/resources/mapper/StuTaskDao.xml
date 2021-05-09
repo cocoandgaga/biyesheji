@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zxj.finalexam.dao.StuTaskDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.zxj.finalexam.entity.StuTaskEntity" id="stuTaskMap">
+        <result property="stuTaskId" column="STU_TASK_ID"/>
+        <result property="userTaskId" column="USER_TASK_ID"/>
+        <result property="stuId" column="STU_ID"/>
+        <result property="stuName" column="STU_NAME"/>
+        <result property="stuTaskName" column="STU_TASK_NAME"/>
+        <result property="stuTaskDescription" column="STU_TASK_DESCRIPTION"/>
+        <result property="deptId" column="DEPT_ID"/>
+        <result property="startTime" column="START_TIME"/>
+        <result property="endTime" column="END_TIME"/>
+        <result property="stuTaskStatus" column="STU_TASK_STATUS"/>
+        <result property="subjectName" column="SUBJECT_NAME"/>
+    </resultMap>
+
+    <resultMap type="com.zxj.finalexam.vo.TaskCard" id="taskCardMap">
+        <result property="stuTaskId" column="STU_TASK_ID"/>
+        <result property="userTaskId" column="USER_TASK_ID"/>
+        <result property="stuTaskName" column="STU_TASK_NAME"/>
+        <result property="stuTaskDescription" column="STU_TASK_DESCRIPTION"/>
+        <result property="stuTaskStatus" column="STU_TASK_STATUS"/>
+        <result property="startTime" column="START_TIME"/>
+        <result property="endTime" column="END_TIME"/>
+        <result property="stuId" column="STU_ID"/>
+        <result property="stuName" column="STU_NAME"/>
+        <result property="deptId" column="DEPT_ID"/>
+        <result property="subjectName" column="SUBJECT_NAME"/>
+        <result property="messageCount" column="MESSAGE_COUNT"/>
+        <association property="position" javaType="com.zxj.finalexam.entity.FreeColumnItem">
+            <result column="TASK_POSITION_COLUMNID" property="columnId"/>
+            <result column="TASK_POSITION_STATUS_COLUMN_ID" property="statusColumnId"/>
+            <result column="TASK_POSITION_TASKID" property="stuTaskId"/>
+            <result column="TASK_POSITION_SORT" property="sort"/>
+            <result column="TASK_POSITION_TYPE" property="type"/>
+
+        </association>
+    </resultMap>
+
+    <sql id="taskSQL">
+       task.STU_TASK_ID as STU_TASK_ID,task.USER_TASK_ID as USER_TASK_ID,
+    task.STU_TASK_NAME as STU_TASK_NAME,task.STU_TASK_DESCRIPTION as STU_TASK_DESCRIPTION,
+    task.STU_TASK_STATUS as STU_TASK_STATUS,task.START_TIME as START_TIME,
+    task.END_TIME as END_TIME,task.STU_ID as STU_ID,task.STU_NAME as STU_NAME,
+    task.DEPT_ID as DEPT_ID,task.SUBJECT_NAME as SUBJECT_NAME
+    </sql>
+    <sql id="taskFreeColumnSQL">
+    freeColumn.COLUMN_ID as TASK_POSITION_COLUMNID,
+    freeColumn.STATUS_COLUMN_ID as TASK_POSITION_STATUS_COLUMN_ID,
+    freeColumn.SORT as TASK_POSITION_SORT,
+    freeColumn.TYPE as TASK_POSITION_TYPE,
+    freeColumn.STU_TASK_ID as TASK_POSITION_TASKID
+    </sql>
+    <update id="clearStartEndTime">
+        update stu_task set START_TIME = null,END_TIME = null where STU_TASK_ID = #{stuTaskId}
+    </update>
+
+    <select id="getTaskAndPosition" resultMap="taskCardMap">
+        select
+        <include refid="taskSQL"></include>,
+        (select count(t5.ID)from card_message t5 where t5.STU_TASK_ID = task.STU_TASK_ID) MESSAGE_COUNT,
+        <include refid="taskFreeColumnSQL"></include>
+        from
+        (select * from stu_task where STU_TASK_ID=#{stuTaskId}) task
+        left join free_column_item freeColumn
+        on freeColumn.STU_TASK_ID=task.STU_TASK_ID
+    </select>
+    <delete id="removeTaskFreeColumnMessagesById">
+        delete
+        task,freeColumn,mesage
+        from
+        stu_task task
+        left join free_column_item freeColumn
+        on freeColumn.STU_TASK_ID=task.STU_TASK_ID
+        left join card_message mesage
+        on task.STU_TASK_ID=mesage.STU_TASK_ID
+        where task.STU_TASK_ID=#{stuTaskId}
+    </delete>
+
+
+</mapper>

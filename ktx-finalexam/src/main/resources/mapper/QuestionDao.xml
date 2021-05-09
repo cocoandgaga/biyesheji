@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zxj.finalexam.dao.QuestionDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.zxj.finalexam.entity.QuestionEntity" id="questionMap">
+        <result property="id" column="ID"/>
+        <result property="title" column="TITLE"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="gmtCreate" column="GMT_CREATE"/>
+        <result property="gmtModified" column="GMT_MODIFIED"/>
+        <result property="creator" column="CREATOR"/>
+        <result property="viewCnt" column="VIEW_CNT"/>
+        <result property="likeCnt" column="LIKE_CNT"/>
+        <result property="commentCnt" column="COMMENT_CNT"/>
+        <result property="tags" column="TAGS"/>
+        <result property="content" column="CONTENT"/>
+        <result property="type" column="TYPE"/>
+    </resultMap>
+
+    <update id="subCommentCnt">
+         update QUESTION set COMMENT_CNT=COMMENT_CNT-1 where ID=#{id}
+    </update>
+
+    <update id="addLikeCnt">
+        update QUESTION set LIKE_CNT=LIKE_CNT+1 where ID=#{id}
+    </update>
+    <update id="subLikeCnt">
+        update QUESTION set LIKE_CNT=LIKE_CNT-1 where ID=#{id}
+    </update>
+    <update id="addCommentCnt">
+        update QUESTION set COMMENT_CNT=COMMENT_CNT+1 where ID=#{id}
+    </update>
+</mapper>

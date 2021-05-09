@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zxj.finalexam.dao.StuUserDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.zxj.finalexam.entity.StuUserEntity" id="stuUserMap">
+        <result property="userId" column="USER_ID"/>
+        <result property="deptId" column="DEPT_ID"/>
+        <result property="username" column="USERNAME"/>
+        <result property="password" column="PASSWORD"/>
+        <result property="salt" column="SALT"/>
+        <result property="email" column="EMAIL"/>
+        <result property="mobile" column="MOBILE"/>
+        <result property="status" column="STATUS"/>
+        <result property="createUserId" column="CREATE_USER_ID"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="updateTime" column="UPDATE_TIME"/>
+        <result property="objStatus" column="OBJ_STATUS"/>
+        <result property="nickName" column="NICK_NAME"/>
+        <result property="grade" column="GRADE"/>
+    </resultMap>
+
+    <select id="queryByUserId" resultType="com.zxj.finalexam.entity.StuUserEntity">
+        select * from STU_USER where USER_ID = #{userId}
+    </select>
+    <update id="updateToken">
+      update littlemall_admin.sys_user_token set token = #{token}  where stu_id = #{stuId}
+  </update>
+</mapper>
