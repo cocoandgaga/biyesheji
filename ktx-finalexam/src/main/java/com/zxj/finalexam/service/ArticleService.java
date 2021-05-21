@@ -16,9 +16,6 @@ import java.util.Map;
 public interface ArticleService extends IService<ArticleEntity> {
 
     PageUtils queryPage(Map<String, Object> params,Long deptId);
-    void updateViewCnt(ArticleEntity articleEntity);
-    void updateLikeCnt(ArticleEntity articleEntity);
-    void updateCommentCnt(ArticleEntity articleEntity);
 
 }
 

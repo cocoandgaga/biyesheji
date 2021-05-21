@@ -1,5 +1,6 @@
 package com.zxj.finalexam.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.io.Serializable;
 
@@ -53,6 +54,10 @@ public class CardMessageEntity implements Serializable {
     @TableField("CREATE_TIME")
     private Date createTime;
 
-
-
+    @TableField(exist = false)
+    private BigDecimal score;
+    @TableField(exist = false)
+    private String subjectName;
+    @TableField(exist = false)
+    private String taskName;
 }

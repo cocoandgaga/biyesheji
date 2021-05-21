@@ -91,4 +91,7 @@ public class SysUserEntity implements Serializable {
 	@TableField(exist = false)
 	private Long deptId;
 
+	@TableField(exist = false)
+	private List categoryIds;
+
 }

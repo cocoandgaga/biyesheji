@@ -25,25 +25,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleDao, ArticleEntity> i
         if (deptId!=null){
             queryWrapper.eq("DEPT_ID", deptId);
         }
+        String key = (String)params.get("key");
+        if(key!=null&&!key.isEmpty()){
+            queryWrapper.like("TITLE", key);
+        }
         IPage<ArticleEntity> pageEntity = new Query<ArticleEntity>().getPage(params);
         IPage<ArticleEntity> page = this.page(pageEntity,queryWrapper);
 
         return new PageUtils(page);
-    }
-
-    @Override
-    public void updateViewCnt(ArticleEntity articleEntity) {
-        baseMapper.updateViewCnt(articleEntity);
-    }
-
-    @Override
-    public void updateLikeCnt(ArticleEntity articleEntity) {
-        baseMapper.updateLikeCnt(articleEntity);
-    }
-
-    @Override
-    public void updateCommentCnt(ArticleEntity articleEntity) {
-        baseMapper.updateCommentCnt(articleEntity);
     }
 
 }

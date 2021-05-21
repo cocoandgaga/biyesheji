@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import lombok.Data;
 
@@ -28,6 +29,7 @@ public class UserTaskEntity implements Serializable {
 	private String userTaskDescription;
 	private String subjectName;
 	private Long deptId;
+	private BigDecimal score;
 	/**
 	 * 1 发布中 2 已截止
 	 */

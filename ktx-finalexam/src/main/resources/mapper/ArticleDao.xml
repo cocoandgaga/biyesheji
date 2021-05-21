@@ -20,17 +20,17 @@
         <result property="context" column="CONTEXT"/>
         <result property="author" column="AUTHOR"/>
     </resultMap>
-    <update id="updateViewCnt" parameterType="com.zxj.finalexam.entity.ArticleEntity">
+    <update id="updateViewCnt">
         update ARTICLE
         SET
-        VIEW_CNT=VIEW_CNT + #{viewCnt,jdbcType=BIGINT}
+        VIEW_CNT=VIEW_CNT + 1
         where ID=#{id}
     </update>
 
-    <update id="updateLikeCnt" parameterType="com.zxj.finalexam.entity.ArticleEntity">
+    <update id="updateLikeCnt">
         update ARTICLE
         SET
-        LIKE_CNT=LIKE_CNT + #{likeCnt}
+        LIKE_CNT=LIKE_CNT + 1
         where ID=#{id}
     </update>
 

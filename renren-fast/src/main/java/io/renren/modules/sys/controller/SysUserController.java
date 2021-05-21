@@ -9,6 +9,8 @@ import io.renren.common.validator.Assert;
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.common.validator.group.AddGroup;
 import io.renren.common.validator.group.UpdateGroup;
+import io.renren.modules.sys.dao.SysUserDao;
+import io.renren.modules.sys.entity.SysCategory;
 import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.inf.ITelnetClient;
 import io.renren.modules.sys.service.SysUserRoleService;
@@ -19,6 +21,7 @@ import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +38,8 @@ public class SysUserController extends AbstractController {
 
 	@Autowired
 	private ITelnetClient telnetClient;
-
+	@Autowired
+	private SysUserDao sysUserDao;
 
 	/**
 	 * 所有用户列表
@@ -89,11 +93,15 @@ public class SysUserController extends AbstractController {
 	@RequiresPermissions("sys:user:info")
 	public R info(@PathVariable("userId") Long userId){
 		SysUserEntity user = sysUserService.getById(userId);
-		
+		 SysCategory category =sysUserDao.getDeptId(userId);
+		 List list=new ArrayList(2);
+		 list.add(category.getParentCid());
+		 list.add(category.getCatId());
+		user.setDeptId(category.getCatId());
 		//获取用户所属的角色列表
 		List<Long> roleIdList = sysUserRoleService.queryRoleIdList(userId);
 		user.setRoleIdList(roleIdList);
-		
+		user.setCategoryIds(list);
 		return R.ok().put("user", user);
 	}
 	
@@ -121,7 +129,7 @@ public class SysUserController extends AbstractController {
 	@RequiresPermissions("sys:user:update")
 	public R update(@RequestBody SysUserEntity user){
 		ValidatorUtils.validateEntity(user, UpdateGroup.class);
-
+		sysUserDao.updateDeptId(user.getDeptId(),user.getUserId());
 		user.setCreateUserId(getUserId());
 		sysUserService.update(user);
 		

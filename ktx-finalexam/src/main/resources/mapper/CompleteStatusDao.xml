@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxj.finalexam.dao.CompleteStatusDao">
+
+    <resultMap id="completeStatusResultMap" type="com.zxj.finalexam.dto.CompleteStatusDTO">
+        <result column="NICK_NAME" property="nickName"/>
+        <result column="STATUS" property="status"/>
+        <result column="USERNAME" property="stuId"/>
+    </resultMap>
+
+
+    <select id="getCompleted" resultMap="completeStatusResultMap">
+select stu.NICK_NAME,stu.USERNAME,
+       (CASE
+            WHEN completed.status = 0 THEN 0
+            WHEN completed.status = 1 THEN 1
+            ELSE 2 END) as STATUS
+
+from (select *
+      from STU_USER
+      where DEPT_ID =#{deptId} ) stu left join
+            (
+                select *
+                from COMPLETE_STATUS
+                where  USER_TASK_ID=#{userTaskId}
+            ) completed
+      on stu.USER_ID=completed.STU_ID
+
+    </select>
+</mapper>

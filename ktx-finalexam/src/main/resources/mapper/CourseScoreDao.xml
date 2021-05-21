@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zxj.finalexam.dao.CourseScoreDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.zxj.finalexam.dto.CourseScoreDTO" id="courseScoreMap">
+        <result property="subjectName" column="SUBJECT_NAME"/>
+        <result property="sumScore" column="SUM_SCORE"/>
+    </resultMap>
+    <resultMap type="com.zxj.finalexam.entity.CourseScoreEntity" id="detailScoreMap">
+        <result property="score" column="SCORE"/>
+        <result property="taskName" column="TASK_NAME"/>
+    </resultMap>
+    <resultMap type="com.zxj.finalexam.dto.DetailExport" id="allDetailScoreMap">
+        <result property="subjectName" column="SUBJECT_NAME"/>
+        <result property="taskName" column="TASK_NAME"/>
+        <result property="stuNo" column="USERNAME"/>
+        <result property="stuName" column="NICK_NAME"/>
+        <result property="score" column="SCORE"/>
+    </resultMap>
+    <resultMap id="allSumScoreMap" type="com.zxj.finalexam.dto.SumScoreExport">
+        <result property="subjectName" column="SUBJECT_NAME"/>
+        <result property="stuNo" column="USERNAME"/>
+        <result property="stuName" column="NICK_NAME"/>
+        <result property="sumScore" column="SUM_SCORE"/>
+    </resultMap>
+    <select id="getAllStudentSumScore" parameterType="java.util.HashMap"  resultMap="allSumScoreMap">
+        select course.SUBJECT_NAME, stu.USERNAME, stu.NICK_NAME, sum(course.SCORE) as SUM_SCORE
+        from (select * from course_score
+        <where>
+            <if test="deptId != null">
+                and DEPT_ID = #{deptId}
+            </if>
+            <if test="subjectNames != null">
+                and SUBJECT_NAME in
+                <foreach collection="subjectNames" close=")" separator="," open="(" item="subjectName">
+                    #{subjectName}
+                </foreach>
+            </if>
+        </where>
+        ) course
+        left join STU_USER stu
+        on stu.user_id = course.STU_ID
+        group by course.SUBJECT_NAME, course.STU_ID
+        order by course.SUBJECT_NAME
+    </select>
+    <select id="getAllCourseScore" resultMap="courseScoreMap">
+        select   course.SUBJECT_NAME, sum(course.SCORE) as SUM_SCORE
+        from (select * from course_score where STU_ID = #{stuId} and DEPT_ID = #{deptId}) course
+                 left join STU_USER stu
+                           on stu.user_id = course.STU_ID
+        group by course.SUBJECT_NAME, course.STU_ID
+    </select>
+
+    <select id="getDetailScore" resultMap="detailScoreMap">
+        select TASK_NAME,SCORE from course_score where  DEPT_ID = #{deptId} and STU_ID = #{stuId}
+             and SUBJECT_NAME like #{subjectName}
+    </select>
+
+    <select id="getAllStudentScore" parameterType="java.util.HashMap" resultMap="allDetailScoreMap">
+        select course.SUBJECT_NAME, course.TASK_NAME, SU.USERNAME, SU.NICK_NAME, course.SCORE
+        from (select USER_TASK_ID,score, TASK_NAME, SUBJECT_NAME, STU_ID
+        from course_score
+        <where>
+            <if test="deptId != null">
+                and DEPT_ID = #{deptId}
+            </if>
+            <if test="userTaskIds != null">
+                and USER_TASK_ID in
+                <foreach collection="userTaskIds" close=")" separator="," open="(" item="userTaskId">
+                    #{userTaskId}
+                </foreach>
+            </if>
+        </where>
+        ) course
+        left join STU_USER SU on course.STU_ID = SU.USER_ID
+        order by USER_TASK_ID
+    </select>
+
+</mapper>

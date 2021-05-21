@@ -21,5 +21,6 @@ public interface UserTaskService extends IService<UserTaskEntity> {
     PageUtils queryPage(Map<String, Object> params,Long userId);
 
     UserTaskEntity validateUserStoryObjStatus(String userTaskId);
+
 }
 

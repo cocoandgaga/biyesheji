@@ -8,19 +8,19 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zxj.common.utils.PageUtils;
 import com.zxj.common.utils.Query;
 
-import com.zxj.finalexam.dao.StudyMaterialsDao;
-import com.zxj.finalexam.entity.StudyMaterialsEntity;
-import com.zxj.finalexam.service.StudyMaterialsService;
+import com.zxj.finalexam.dao.CourseScoreDao;
+import com.zxj.finalexam.entity.CourseScoreEntity;
+import com.zxj.finalexam.service.CourseScoreService;
 
 
-@Service("studyMaterialsService")
-public class StudyMaterialsServiceImpl extends ServiceImpl<StudyMaterialsDao, StudyMaterialsEntity> implements StudyMaterialsService {
+@Service("courseScoreService")
+public class CourseScoreServiceImpl extends ServiceImpl<CourseScoreDao, CourseScoreEntity> implements CourseScoreService {
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
-        IPage<StudyMaterialsEntity> page = this.page(
-                new Query<StudyMaterialsEntity>().getPage(params),
-                new QueryWrapper<StudyMaterialsEntity>()
+        IPage<CourseScoreEntity> page = this.page(
+                new Query<CourseScoreEntity>().getPage(params),
+                new QueryWrapper<CourseScoreEntity>()
         );
 
         return new PageUtils(page);

@@ -5,12 +5,12 @@ import com.zxj.finalexam.entity.FreeColumnItem;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
 /**
  * 用户故事卡片实体类
- * @author TianLong
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
@@ -19,6 +19,7 @@ public class UserStoryCard {
 
     private String userTaskId;
     private String userId;
+    private BigDecimal score;
     private String userName;
     private String userTaskName;
     private String userTaskDescription;

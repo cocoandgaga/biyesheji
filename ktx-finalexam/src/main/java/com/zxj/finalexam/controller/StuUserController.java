@@ -130,8 +130,8 @@ public class StuUserController {
     @RequestMapping("/info")
     public R info(HttpServletRequest request) {
         StuUserEntity stu = (StuUserEntity) request.getSession().getAttribute("user");
-        DeptUserEntity deptUserEntity = deptUserDao.getDeptName(stu.getUserId());
-        stu.setDeptName(deptUserEntity.getName());
+        CategoryEntity categoryEntity = categoryDao.selectById(stu.getDeptId());
+        stu.setDeptName(categoryEntity.getName());
         return R.ok().put("user", stu);
     }
 
@@ -161,7 +161,7 @@ public class StuUserController {
                 stu.setUsername(username + i);
                 stu.setStatus(1);
                 stu.setDeptId(deptId);
-                stu.setPassword("stu" + username + i);
+                stu.setPassword("123456");
                 //sha256加密
                 String salt = RandomStringUtils.randomAlphanumeric(20);
                 stu.setPassword(new Sha256Hash(stu.getPassword(), salt).toHex());

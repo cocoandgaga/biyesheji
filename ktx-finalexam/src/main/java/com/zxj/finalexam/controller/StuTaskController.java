@@ -1,25 +1,19 @@
 package com.zxj.finalexam.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.zxj.finalexam.dao.DeptUserDao;
+import com.zxj.common.utils.R;
 import com.zxj.finalexam.dao.FreeColumnItemDao;
 import com.zxj.finalexam.dao.StuTaskDao;
-import com.zxj.finalexam.entity.*;
-import com.zxj.finalexam.service.DeptUserService;
-import com.zxj.finalexam.service.FreeColumnItemService;
+import com.zxj.finalexam.entity.FreeColumnItem;
+import com.zxj.finalexam.entity.StuTaskEntity;
+import com.zxj.finalexam.entity.StuUserEntity;
+import com.zxj.finalexam.service.StuTaskService;
 import com.zxj.finalexam.service.UserTaskService;
 import com.zxj.finalexam.vo.TaskCard;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import com.zxj.finalexam.service.StuTaskService;
-import com.zxj.common.utils.PageUtils;
-import com.zxj.common.utils.R;
 
 import javax.servlet.http.HttpServletRequest;
 

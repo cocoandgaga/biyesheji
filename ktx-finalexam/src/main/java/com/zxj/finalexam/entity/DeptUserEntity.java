@@ -24,7 +24,6 @@ public class DeptUserEntity implements Serializable {
 	@TableField("dept_id")
 	private Long deptId;
 	private Long userId;
-	private Integer grade;
 	@TableField(exist = false)
 	private String name;
 	@TableField(exist = false)

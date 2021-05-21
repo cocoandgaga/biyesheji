@@ -43,6 +43,7 @@ public class AttachmentController {
     @RequestMapping("/info/{id}")
     public R info(@PathVariable("id") Long id){
         Attachment attachment = attachmentService.getById(id);
+
         return R.ok().put("attachment", attachment);
     }
 
